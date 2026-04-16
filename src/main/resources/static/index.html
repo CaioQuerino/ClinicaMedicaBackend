@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Médica - Sistema de Gestão</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 Clínica Médica</h1>
+            <p>Sistema de Gestão de Consultas e Planos de Saúde</p>
+        </header>
+
+        <nav class="menu">
+            <button onclick="mostrarSecao('cadastro')">➕ Adicionar</button>
+            <button onclick="mostrarSecaoListagem()">📋 Listar</button>
+            <button onclick="mostrarSecao('busca')">🔍 Buscar</button>
+            <button onclick="mostrarSecao('atualizar')">✏️ Atualizar</button>
+            <button onclick="mostrarSecao('deletar')">🗑️ Deletar</button>
+        </nav>
+
+        <main>
+            <!-- Seção Cadastro -->
+            <section id="cadastro" class="secao">
+                <h2>Adicionar Novo Registro</h2>
+                <div class="form-group">
+                    <label>Tipo:</label>
+                    <select id="tipoCadastro" onchange="mostrarFormCadastro()">
+                        <option value="medico">Médico</option>
+                        <option value="dentista">Dentista</option>
+                        <option value="psicologo">Psicólogo</option>
+                        <option value="paciente">Paciente</option>
+                        <option value="consulta">Consulta</option>
+                        <option value="plano">Plano de Saúde</option>
+                    </select>
+                </div>
+                
+                <!-- Form Médico -->
+                <div id="formMedico" class="form-card">
+                    <h3>Cadastrar Médico</h3>
+                    <input type="text" id="medicoNome" placeholder="Nome completo">
+                    <input type="text" id="medicoNumeroRegistro" placeholder="Número Registro (CRM)">
+                    <input type="text" id="medicoEspecialidade" placeholder="Especialidade">
+                    <input type="tel" id="medicoTelefone" placeholder="Telefone">
+                    <input type="email" id="medicoEmail" placeholder="Email">
+                    <button onclick="cadastrarMedico()">Salvar Médico</button>
+                </div>
+
+                <!-- Form Dentista -->
+                <div id="formDentista" class="form-card" style="display:none">
+                    <h3>Cadastrar Dentista</h3>
+                    <input type="text" id="dentistaNome" placeholder="Nome completo">
+                    <input type="text" id="dentistaNumeroRegistro" placeholder="Número Registro (CRO)">
+                    <input type="text" id="dentistaEspecialidade" placeholder="Especialidade">
+                    <input type="tel" id="dentistaTelefone" placeholder="Telefone">
+                    <input type="email" id="dentistaEmail" placeholder="Email">
+                    <button onclick="cadastrarDentista()">Salvar Dentista</button>
+                </div>
+
+                <!-- Form Psicólogo -->
+                <div id="formPsicologo" class="form-card" style="display:none">
+                    <h3>Cadastrar Psicólogo</h3>
+                    <input type="text" id="psicologoNome" placeholder="Nome completo">
+                    <input type="text" id="psicologoNumeroRegistro" placeholder="Número Registro (CRP)">
+                    <input type="text" id="psicologoEspecialidade" placeholder="Especialidade">
+                    <input type="tel" id="psicologoTelefone" placeholder="Telefone">
+                    <input type="email" id="psicologoEmail" placeholder="Email">
+                    <button onclick="cadastrarPsicologo()">Salvar Psicólogo</button>
+                </div>
+
+                <!-- Form Paciente -->
+                <div id="formPaciente" class="form-card" style="display:none">
+                    <h3>Cadastrar Paciente</h3>
+                    <input type="text" id="pacienteNome" placeholder="Nome completo">
+                    <input type="text" id="pacienteCPF" placeholder="CPF (apenas números)">
+                    <input type="date" id="pacienteDataNascimento">
+                    <input type="tel" id="pacienteTelefone" placeholder="Telefone">
+                    <input type="text" id="pacienteEndereco" placeholder="Endereço">
+                    <select id="pacientePlanoId">
+                        <option value="">Selecione um plano de saúde</option>
+                    </select>
+                    <button onclick="cadastrarPaciente()">Salvar Paciente</button>
+                </div>
+
+                <!-- Form Consulta -->
+                <div id="formConsulta" class="form-card" style="display:none">
+                    <h3>Agendar Consulta</h3>
+                    <select id="consultaProfissionalId">
+                        <option value="">Selecione um profissional</option>
+                    </select>
+                    <select id="consultaPacienteId">
+                        <option value="">Selecione um paciente</option>
+                    </select>
+                    <input type="datetime-local" id="consultaDataHora">
+                    <textarea id="consultaObservacao" placeholder="Observações"></textarea>
+                    <select id="consultaStatus">
+                        <option value="AGENDADA">Agendada</option>
+                        <option value="REALIZADA">Realizada</option>
+                        <option value="CANCELADA">Cancelada</option>
+                    </select>
+                    <button onclick="cadastrarConsulta()">Agendar Consulta</button>
+                </div>
+
+                <!-- Form Plano -->
+                <div id="formPlano" class="form-card" style="display:none">
+                    <h3>Cadastrar Plano de Saúde</h3>
+                    <input type="text" id="planoCodigo" placeholder="Código do plano">
+                    <input type="text" id="planoNome" placeholder="Nome do plano">
+                    <input type="text" id="planoOperadora" placeholder="Operadora">
+                    <input type="text" id="planoTipo" placeholder="Tipo">
+                    <input type="number" id="planoDesconto" step="0.01" placeholder="Desconto (%)">
+                    <label>
+                        <input type="checkbox" id="planoAtivo" checked> Plano ativo
+                    </label>
+                    <textarea id="planoObservacoes" placeholder="Observações"></textarea>
+                    <button onclick="cadastrarPlano()">Salvar Plano</button>
+                </div>
+            </section>
+
+            <!-- Seção Listagem -->
+            <section id="listagem" class="secao" style="display:none">
+                <h2>Lista de Registros</h2>
+                <div class="form-group">
+                    <label>Selecione o tipo:</label>
+                    <select id="tipoListagem" onchange="carregarListagem()">
+                        <option value="medicos">Médicos</option>
+                        <option value="dentistas">Dentistas</option>
+                        <option value="psicologos">Psicólogos</option>
+                        <option value="pacientes">Pacientes</option>
+                        <option value="consultas">Consultas</option>
+                        <option value="planos">Planos de Saúde</option>
+                    </select>
+                </div>
+                <div id="tabelaContainer"></div>
+            </section>
+
+            <!-- Seção Busca -->
+            <section id="busca" class="secao" style="display:none">
+                <h2>Buscar Registros</h2>
+                <div class="form-group">
+                    <label>Tipo:</label>
+                    <select id="tipoBusca" onchange="mostrarCampoBusca()">
+                        <option value="medico">Médico</option>
+                        <option value="dentista">Dentista</option>
+                        <option value="psicologo">Psicólogo</option>
+                        <option value="paciente">Paciente</option>
+                        <option value="plano">Plano de Saúde</option>
+                    </select>
+                </div>
+                <div id="campoBusca"></div>
+                <div id="resultadoBusca"></div>
+            </section>
+
+            <!-- Seção Atualizar -->
+            <section id="atualizar" class="secao" style="display:none">
+                <h2>Atualizar Registro</h2>
+                <div class="form-group">
+                    <label>Tipo:</label>
+                    <select id="tipoAtualizar" onchange="mostrarFormAtualizar()">
+                        <option value="medico">Médico</option>
+                        <option value="dentista">Dentista</option>
+                        <option value="psicologo">Psicólogo</option>
+                        <option value="paciente">Paciente</option>
+                        <option value="consulta">Consulta</option>
+                        <option value="plano">Plano de Saúde</option>
+                    </select>
+                </div>
+                
+                <div id="formAtualizarMedico" class="form-card">
+                    <h3>Atualizar Médico</h3>
+                    <input type="number" id="atualizarMedicoId" placeholder="ID do médico">
+                    <button onclick="carregarMedico()">Carregar Dados</button>
+                    <div id="dadosMedico"></div>
+                </div>
+
+                <div id="formAtualizarDentista" class="form-card" style="display:none">
+                    <h3>Atualizar Dentista</h3>
+                    <input type="number" id="atualizarDentistaId" placeholder="ID do dentista">
+                    <button onclick="carregarDentista()">Carregar Dados</button>
+                    <div id="dadosDentista"></div>
+                </div>
+
+                <div id="formAtualizarPsicologo" class="form-card" style="display:none">
+                    <h3>Atualizar Psicólogo</h3>
+                    <input type="number" id="atualizarPsicologoId" placeholder="ID do psicólogo">
+                    <button onclick="carregarPsicologo()">Carregar Dados</button>
+                    <div id="dadosPsicologo"></div>
+                </div>
+
+                <div id="formAtualizarPaciente" class="form-card" style="display:none">
+                    <h3>Atualizar Paciente</h3>
+                    <input type="number" id="atualizarPacienteId" placeholder="ID do paciente">
+                    <button onclick="carregarPaciente()">Carregar Dados</button>
+                    <div id="dadosPaciente"></div>
+                </div>
+
+                <div id="formAtualizarConsulta" class="form-card" style="display:none">
+                    <h3>Atualizar Consulta</h3>
+                    <input type="number" id="atualizarConsultaId" placeholder="ID da consulta">
+                    <button onclick="carregarConsulta()">Carregar Dados</button>
+                    <div id="dadosConsulta"></div>
+                </div>
+
+                <div id="formAtualizarPlano" class="form-card" style="display:none">
+                    <h3>Atualizar Plano de Saúde</h3>
+                    <input type="number" id="atualizarPlanoId" placeholder="ID do plano">
+                    <button onclick="carregarPlano()">Carregar Dados</button>
+                    <div id="dadosPlano"></div>
+                </div>
+            </section>
+
+            <!-- Seção Deletar -->
+            <section id="deletar" class="secao" style="display:none">
+                <h2>Deletar Registro</h2>
+                <div class="form-group">
+                    <label>Tipo:</label>
+                    <select id="tipoDeletar">
+                        <option value="medico">Médico</option>
+                        <option value="dentista">Dentista</option>
+                        <option value="psicologo">Psicólogo</option>
+                        <option value="paciente">Paciente</option>
+                        <option value="consulta">Consulta</option>
+                        <option value="plano">Plano de Saúde</option>
+                    </select>
+                </div>
+                <div class="form-card">
+                    <input type="number" id="deletarId" placeholder="ID do registro">
+                    <button onclick="deletarRegistro()">Deletar</button>
+                </div>
+                <div id="mensagemDeletar"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Projeto "Clínica Médica" criado no Curso de Qualificação BackEnd - Senai Maracanã - T.59/60 - Abril/2026 - Professor Anthony Freitas</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
